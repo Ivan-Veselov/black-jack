@@ -1,6 +1,7 @@
 package ru.spbau.bachelors2015.blackjack;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
@@ -66,12 +67,34 @@ public class GUI extends Application{
         if (score > MAX_SCORE) {
             game.pass();
         }
-        Text cardText = new Text();
+        Text cardText = new Text(newCard.toString());
+        ObservableList<Text> observableList = cardsList.getItems();
+        observableList.add(cardText);
+        cardsList.setItems(observableList);
     };
 
     private final EventHandler<ActionEvent> onFinishClick = event -> {
         game.pass();
         more.setDisable(true);
         finish.setDisable(true);
+        onGameFinish(true, 0, 0);
     };
+
+    public void onGameFinish(boolean won, int ourScore, int opponentScore) {
+        final String WON = "You won";
+        final String LOST = "You lost";
+        Text resText = new Text();
+        if (won) {
+            resText.setText(WON);
+        } else {
+            resText.setText(LOST);
+        }
+        Text scoreText = new Text();
+        scoreText.setText(String.valueOf(ourScore) + ":" + String.valueOf(opponentScore));
+        VBox resBox = new VBox();
+        resBox.getChildren().add(resText);
+        resBox.getChildren().add(scoreText);
+        Scene resScene = new Scene(resBox);
+        stage.setScene(resScene);
+    }
 }
