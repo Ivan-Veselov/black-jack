@@ -66,9 +66,12 @@ public class GUI extends Application{
         if (score > MAX_SCORE) {
             game.pass();
         }
+        Text cardText = new Text();
     };
 
     private final EventHandler<ActionEvent> onFinishClick = event -> {
         game.pass();
+        more.setDisable(true);
+        finish.setDisable(true);
     };
 }

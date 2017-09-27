@@ -8,4 +8,9 @@ public class Card {
     public Suit suit() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return rank().toString() + " of " + suit().toString();
+    }
 }
