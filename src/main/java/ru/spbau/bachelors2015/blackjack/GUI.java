@@ -13,6 +13,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static ru.spbau.bachelors2015.blackjack.CardRank.*;
+import static ru.spbau.bachelors2015.blackjack.CardRank.TEN;
+import static ru.spbau.bachelors2015.blackjack.Suit.HEARTS;
+import static ru.spbau.bachelors2015.blackjack.Suit.SPADES;
+
 public class GUI extends Application{
     public static final int MAX_SCORE = 21;
     private Stage stage;
@@ -55,7 +63,13 @@ public class GUI extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        game = new Game(null);
+        game = new Game(Arrays.asList(
+                new Card(SPADES, TWO),
+                new Card(HEARTS, THREE),
+                new Card(HEARTS, FIVE),
+                new Card(HEARTS, SEVEN),
+                new Card(SPADES, TEN),
+                new Card(HEARTS, TEN)));
         stage = primaryStage;
         initStage();
     }
@@ -77,10 +91,10 @@ public class GUI extends Application{
         game.pass();
         more.setDisable(true);
         finish.setDisable(true);
-        onGameFinish(true, 0);
+        onGameFinish(true);
     };
 
-    public void onGameFinish(boolean won, int opponentScore) {
+    public void onGameFinish(boolean won) {
         final String WON = "You won";
         final String LOST = "You lost";
         Text resText = new Text();
@@ -90,7 +104,8 @@ public class GUI extends Application{
             resText.setText(LOST);
         }
         Text scoreText = new Text();
-        scoreText.setText(String.valueOf(score) + ":" + String.valueOf(opponentScore));
+        scoreText.setText(String.valueOf(score) + ":"
+                + String.valueOf(game.computerPoints()));
         VBox resBox = new VBox();
         resBox.getChildren().add(resText);
         resBox.getChildren().add(scoreText);
