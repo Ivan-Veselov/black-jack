@@ -54,7 +54,7 @@ public class GUI extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        game = new Game();
+        game = new Game(null);
         stage = primaryStage;
         initStage();
     }
