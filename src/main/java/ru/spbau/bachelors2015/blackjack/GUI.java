@@ -4,11 +4,10 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -21,35 +20,36 @@ public class GUI extends Application{
     private Button finish;
     private final String MORE_TEXT = "More";
     private final String FINISH_TEXT = "Finish";
-    private HBox buttonHBox;
+    private HBox stateHBox;
     private VBox gameVBox;
-    private HBox gameHBox;
     private Text scoreText;
     private Game game;
     private int score;
     private ListView<Text> cardsList;
+    private final int HEIGHT = 320;
+    private final int WIDTH = 320;
 
     private void initStage() {
         more = new Button(MORE_TEXT);
         more.setOnAction(onMoreClick);
         finish = new Button(FINISH_TEXT);
         finish.setOnAction(onFinishClick);
-
-        buttonHBox = new HBox();
-        buttonHBox.getChildren().add(more);
-        buttonHBox.getChildren().add(finish);
-        cardsList = new ListView<>();
-        cardsList.setOrientation(Orientation.HORIZONTAL);
-        gameVBox = new VBox();
-        gameVBox.getChildren().add(cardsList);
-        gameVBox.getChildren().add(buttonHBox);
         scoreText = new Text("0");
         score = 0;
-        gameHBox = new HBox();
-        gameHBox.getChildren().add(scoreText);
-        gameHBox.getChildren().add(gameVBox);
 
-        stage.setScene(new Scene(gameHBox));
+        stateHBox = new HBox();
+        stateHBox.getChildren().add(scoreText);
+        stateHBox.getChildren().add(more);
+        stateHBox.getChildren().add(finish);
+        stateHBox.setAlignment(Pos.CENTER_RIGHT);
+        cardsList = new ListView<>();
+        //cardsList.setOrientation(Orientation.HORIZONTAL);
+        gameVBox = new VBox();
+        gameVBox.getChildren().add(cardsList);
+        gameVBox.getChildren().add(stateHBox);
+        gameVBox.setAlignment(Pos.CENTER);
+
+        stage.setScene(new Scene(gameVBox, WIDTH, HEIGHT));
         stage.show();
     }
 
@@ -77,10 +77,10 @@ public class GUI extends Application{
         game.pass();
         more.setDisable(true);
         finish.setDisable(true);
-        onGameFinish(true, 0, 0);
+        onGameFinish(true, 0);
     };
 
-    public void onGameFinish(boolean won, int ourScore, int opponentScore) {
+    public void onGameFinish(boolean won, int opponentScore) {
         final String WON = "You won";
         final String LOST = "You lost";
         Text resText = new Text();
@@ -90,11 +90,12 @@ public class GUI extends Application{
             resText.setText(LOST);
         }
         Text scoreText = new Text();
-        scoreText.setText(String.valueOf(ourScore) + ":" + String.valueOf(opponentScore));
+        scoreText.setText(String.valueOf(score) + ":" + String.valueOf(opponentScore));
         VBox resBox = new VBox();
         resBox.getChildren().add(resText);
         resBox.getChildren().add(scoreText);
-        Scene resScene = new Scene(resBox);
+        resBox.setAlignment(Pos.CENTER);
+        Scene resScene = new Scene(resBox, WIDTH, HEIGHT);
         stage.setScene(resScene);
     }
 }
