@@ -1,6 +1,7 @@
 package ru.spbau.bachelors2015.blackjack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -14,6 +15,23 @@ public class Game {
 
     public Game(List<Card> deck) {
         this.deck = new ArrayList<>(deck);
+        afterInit();
+    }
+
+    public Game() {
+        deck = new ArrayList<>();
+        for (Suit suit : Suit.values()) {
+            for (CardRank rank : CardRank.values()) {
+                deck.add(new Card(suit, rank));
+            }
+        }
+
+        Collections.shuffle(deck);
+
+        afterInit();
+    }
+
+    private void afterInit() {
         playerHand = new ArrayList<>();
         computerHand = new ArrayList<>();
 
