@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private final static int MAX_POINTS = 21;
-
     private List<Card> hand;
     private boolean isPassed;
 
@@ -33,7 +31,7 @@ public class Player {
     public int points() {
         int ps = hand.stream().map(Card::rank).map(CardRank::value).mapToInt(i -> i).sum();
 
-        if (ps > MAX_POINTS) {
+        if (ps > Game.getMaxPoints()) {
             ps -= 10 * hand.stream().map(Card::rank).filter(r -> r == CardRank.ACE).count();
         }
 

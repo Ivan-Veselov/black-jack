@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Game {
+    private final static int MAX_POINTS = 21;
     private List<Card> deck;
 
     private Player[] players;
@@ -42,15 +43,15 @@ public class Game {
 
     // playerIndex == 0 -- первый игрок
     // playerIndex == 1 -- второй игрок
-    public Card nextCard(int playerIndex) {
+    public Card nextCard(int playerId) {
         Card card = pick();
-        players[playerIndex].addCard(card);
+        players[playerId].addCard(card);
 
         return card;
     }
 
-    public void pass(int playerIndex) {
-        players[playerIndex].pass();
+    public void pass(int playerId) {
+        players[playerId].pass();
     }
 
     private Card pick() {
@@ -64,5 +65,36 @@ public class Game {
         return players[0].isPassed() && players[1].isPassed();
     }
 
-    // понимать кто из игроков победил
+    public int getPlayerPoints(int playerId) {
+        return players[playerId].points();
+    }
+
+    // -1 если ничья иначе id игрока
+    public int getWinnerId() {
+        int firstPoints = getPlayerPoints(0);
+        int secondPoints = getPlayerPoints(1);;
+
+        if ((firstPoints > MAX_POINTS && secondPoints > MAX_POINTS) ||
+                firstPoints == secondPoints) {
+            return -1;
+        }
+
+        if (firstPoints <= MAX_POINTS && secondPoints > MAX_POINTS) {
+            return 0;
+        }
+
+        if (firstPoints > MAX_POINTS) {
+            return 1;
+        }
+        
+        if (firstPoints < secondPoints) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public static int getMaxPoints() {
+        return MAX_POINTS;
+    }
 }
