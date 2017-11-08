@@ -50,8 +50,12 @@ public class Game {
         return card;
     }
 
-    public void pass(int playerId) {
+    // true, если все спасовали
+    // false, если игра продолжается
+    public boolean pass(int playerId) {
         players[playerId].pass();
+
+        return isAllPassed();
     }
 
     private Card pick() {
@@ -86,7 +90,7 @@ public class Game {
         if (firstPoints > MAX_POINTS) {
             return 1;
         }
-        
+
         if (firstPoints < secondPoints) {
             return 1;
         } else {
