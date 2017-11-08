@@ -5,13 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Game {
-    final int MAX_POINTS = 21;
-
     private List<Card> deck;
 
-    private List<Card> playerHand;
-
-    private List<Card> computerHand;
+    private Player[] players;
 
     public Game(List<Card> deck) {
         this.deck = new ArrayList<>(deck);
@@ -32,33 +28,29 @@ public class Game {
     }
 
     private void afterInit() {
-        playerHand = new ArrayList<>();
-        computerHand = new ArrayList<>();
+        players = new Player[2];
 
-        playerHand.add(pick());
-        playerHand.add(pick());
-        computerHand.add(pick());
-        computerHand.add(pick());
+        for (int i = 0; i < 2; i++) {
+            players[i] = new Player();
+        }
+
+        for (int i = 0; i < 2; i++) {
+            players[0].addCard(pick());
+            players[1].addCard(pick());
+        }
     }
 
-    public Card nextCard() {
+    // playerIndex == 0 -- первый игрок
+    // playerIndex == 1 -- второй игрок
+    public Card nextCard(int playerIndex) {
         Card card = pick();
-        playerHand.add(card);
-        computerMove();
+        players[playerIndex].addCard(card);
 
         return card;
     }
 
-    public void pass() {
-        while (computerMove());
-    }
-
-    public int playerPoints() {
-        return points(playerHand);
-    }
-
-    public int computerPoints() {
-        return points(computerHand);
+    public void pass(int playerIndex) {
+        players[playerIndex].pass();
     }
 
     private Card pick() {
@@ -68,24 +60,9 @@ public class Game {
         return res;
     }
 
-    private boolean computerMove() {
-        final int THRESHOLD = 17;
-
-        if (computerPoints() < THRESHOLD) {
-            computerHand.add(pick());
-            return true;
-        }
-
-        return false;
+    public boolean isAllPassed() {
+        return players[0].isPassed() && players[1].isPassed();
     }
 
-    private int points(List<Card> cards) {
-        int ps = cards.stream().map(Card::rank).map(CardRank::value).mapToInt(i -> i).sum();
-
-        if (ps > MAX_POINTS) {
-            ps -= 10 * cards.stream().map(Card::rank).filter(r -> r == CardRank.ACE).count();
-        }
-
-        return ps;
-    }
+    // понимать кто из игроков победил
 }
