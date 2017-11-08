@@ -23,19 +23,31 @@ import static ru.spbau.bachelors2015.blackjack.Suit.SPADES;
 
 public class GUI extends Application{
     public static final int MAX_SCORE = 21;
+
+    private static final int HEIGHT = 320;
+
+    private static final int WIDTH = 320;
+
+    private final static String MORE_TEXT = "More";
+
+    private final static String FINISH_TEXT = "Finish";
+
     private Stage stage;
+
     private Button more;
+
     private Button finish;
-    private final String MORE_TEXT = "More";
-    private final String FINISH_TEXT = "Finish";
+
     private HBox stateHBox;
+
     private VBox gameVBox;
+
     private Text scoreText;
+
     private Game game;
-    private int score;
+
     private ListView<Text> cardsList;
-    private final int HEIGHT = 320;
-    private final int WIDTH = 320;
+
 
     private void initStage() {
         more = new Button(MORE_TEXT);
@@ -43,7 +55,6 @@ public class GUI extends Application{
         finish = new Button(FINISH_TEXT);
         finish.setOnAction(onFinishClick);
         scoreText = new Text("0");
-        score = 0;
 
         stateHBox = new HBox();
         stateHBox.getChildren().add(scoreText);
@@ -70,9 +81,8 @@ public class GUI extends Application{
 
     private final EventHandler<ActionEvent> onMoreClick = event ->  {
         Card newCard = game.nextCard();
-        score += newCard.rank().value();
-        scoreText.setText(String.valueOf(score));
-        if (score > MAX_SCORE) {
+        scoreText.setText(String.valueOf(game.playerPoints()));
+        if (game.playerPoints() > MAX_SCORE) {
             game.pass();
         }
         Text cardText = new Text(newCard.toString());
@@ -98,7 +108,7 @@ public class GUI extends Application{
             resText.setText(LOST);
         }
         Text scoreText = new Text();
-        scoreText.setText(String.valueOf(score) + ":"
+        scoreText.setText(String.valueOf(game.playerPoints()) + ":"
                 + String.valueOf(game.computerPoints()));
         VBox resBox = new VBox();
         resBox.getChildren().add(resText);
