@@ -13,15 +13,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
-import java.util.List;
+import static ru.spbau.bachelors2015.blackjack.Server.Status.LOSE;
+import static ru.spbau.bachelors2015.blackjack.Server.Status.WIN;
 
-import static ru.spbau.bachelors2015.blackjack.CardRank.*;
-import static ru.spbau.bachelors2015.blackjack.CardRank.TEN;
-import static ru.spbau.bachelors2015.blackjack.Suit.HEARTS;
-import static ru.spbau.bachelors2015.blackjack.Suit.SPADES;
-
-public class GUI extends Application{
+public class GUI extends Application {
     private static final int HEIGHT = 320;
 
     private static final int WIDTH = 320;
@@ -42,9 +37,13 @@ public class GUI extends Application{
 
     private Text scoreText;
 
-    private Game game;
+    private Server server; // todo: initialize
 
     private ListView<Text> cardsList = new ListView<>();
+
+    private final static String WON_TEXT = "You won";
+
+    private final static String LOST_TEXT = "You lost";
 
     private void initMoreButton() {
         more = new Button(MORE_TEXT);
@@ -87,44 +86,74 @@ public class GUI extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        game = new Game();
         stage = primaryStage;
 
+        server.connect();
+
         initStage();
+        while (!server.isStarted());
+
         stage.show();
     }
 
+    private void serverPass() {
+        while (server.status() != Server.Status.YOUR_TURN);
+
+        server.pass();
+    }
+
+    private Card serverNextCard() {
+        while (server.status() != Server.Status.YOUR_TURN);
+
+        return server.nextCard();
+    }
+
     private final EventHandler<ActionEvent> onMoreClick = event ->  {
-        Card newCard = game.nextCard();
-        scoreText.setText(String.valueOf(game.playerPoints()));
-        if (game.playerPoints() > game.MAX_POINTS) {
-            game.pass();
-        }
+        Card newCard = serverNextCard();
+        scoreText.setText(String.valueOf(server.myPoints()));
+
         Text cardText = new Text(newCard.toString());
         ObservableList<Text> observableList = cardsList.getItems();
         observableList.add(cardText);
         cardsList.setItems(observableList);
+
+        if (server.myPoints() >= Game.MAX_POINTS) {
+            more.setDisable(true);
+        }
     };
 
     private final EventHandler<ActionEvent> onFinishClick = event -> {
-        game.pass();
+        serverPass();
         more.setDisable(true);
         finish.setDisable(true);
-        onGameFinish(true);
+        onGameFinish();
     };
 
-    public void onGameFinish(boolean won) {
-        final String WON = "You won";
-        final String LOST = "You lost";
+    private boolean serverWaitForGameFinish() {
+        while (true) {
+            Server.Status status = server.status();
+            if (status == WIN) {
+                return true;
+            }
+
+            if (status == LOSE) {
+                return false;
+            }
+        }
+    }
+
+    public void onGameFinish() {
+        boolean won = serverWaitForGameFinish();
+
         Text resText = new Text();
         if (won) {
-            resText.setText(WON);
+            resText.setText(WON_TEXT);
         } else {
-            resText.setText(LOST);
+            resText.setText(LOST_TEXT);
         }
         Text scoreText = new Text();
-        scoreText.setText(String.valueOf(game.playerPoints()) + ":"
-                + String.valueOf(game.computerPoints()));
+        scoreText.setText(String.valueOf(server.myPoints()) + ":"
+                + String.valueOf(server.hisPoints()));
         VBox resBox = new VBox();
         resBox.getChildren().add(resText);
         resBox.getChildren().add(scoreText);
