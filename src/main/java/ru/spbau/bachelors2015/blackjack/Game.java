@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Game {
-    private final static int MAX_POINTS = 21;
+    public final static int MAX_POINTS = 21;
     private List<Card> deck;
 
     private Player[] players;
@@ -58,6 +58,10 @@ public class Game {
         return isAllPassed();
     }
 
+    public List<Card> getPlayersHand(int playerId) {
+        return players[playerId].getHand();
+    }
+
     private Card pick() {
         Card res = deck.get(0);
         deck.remove(0);
@@ -96,9 +100,5 @@ public class Game {
         } else {
             return 0;
         }
-    }
-
-    public static int getMaxPoints() {
-        return MAX_POINTS;
     }
 }

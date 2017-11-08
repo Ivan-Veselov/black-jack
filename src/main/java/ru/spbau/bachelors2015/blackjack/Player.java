@@ -31,7 +31,7 @@ public class Player {
     public int points() {
         int ps = hand.stream().map(Card::rank).map(CardRank::value).mapToInt(i -> i).sum();
 
-        if (ps > Game.getMaxPoints()) {
+        if (ps > Game.MAX_POINTS) {
             ps -= 10 * hand.stream().map(Card::rank).filter(r -> r == CardRank.ACE).count();
         }
 
