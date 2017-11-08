@@ -44,37 +44,54 @@ public class GUI extends Application{
 
     private Game game;
 
-    private ListView<Text> cardsList;
+    private ListView<Text> cardsList = new ListView<>();
 
-
-    private void initStage() {
+    private void initMoreButton() {
         more = new Button(MORE_TEXT);
         more.setOnAction(onMoreClick);
+    }
+
+    private void initFinishButton() {
         finish = new Button(FINISH_TEXT);
         finish.setOnAction(onFinishClick);
-        scoreText = new Text("0");
+    }
 
+    private void initScoreLabel() {
+        scoreText = new Text("0");
+    }
+
+    private void initStateHBox() {
         stateHBox = new HBox();
         stateHBox.getChildren().add(scoreText);
         stateHBox.getChildren().add(more);
         stateHBox.getChildren().add(finish);
         stateHBox.setAlignment(Pos.CENTER_RIGHT);
-        cardsList = new ListView<>();
-        //cardsList.setOrientation(Orientation.HORIZONTAL);
+    }
+
+    private void initGameVBox() {
         gameVBox = new VBox();
         gameVBox.getChildren().add(cardsList);
         gameVBox.getChildren().add(stateHBox);
         gameVBox.setAlignment(Pos.CENTER);
+    }
+
+    private void initStage() {
+        initMoreButton();
+        initFinishButton();
+        initScoreLabel();
+        initStateHBox();
+        initGameVBox();
 
         stage.setScene(new Scene(gameVBox, WIDTH, HEIGHT));
-        stage.show();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         game = new Game();
         stage = primaryStage;
+
         initStage();
+        stage.show();
     }
 
     private final EventHandler<ActionEvent> onMoreClick = event ->  {
