@@ -11,4 +11,7 @@ public interface Server {
 
     void pass();
     Card nextCard();
+
+    int myPoints();
+    int hisPoints();
 }
