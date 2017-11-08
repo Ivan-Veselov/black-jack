@@ -63,13 +63,7 @@ public class GUI extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        game = new Game(Arrays.asList(
-                new Card(SPADES, TWO),
-                new Card(HEARTS, THREE),
-                new Card(HEARTS, FIVE),
-                new Card(HEARTS, SEVEN),
-                new Card(SPADES, TEN),
-                new Card(HEARTS, TEN)));
+        game = new Game();
         stage = primaryStage;
         initStage();
     }
