@@ -22,8 +22,6 @@ import static ru.spbau.bachelors2015.blackjack.Suit.HEARTS;
 import static ru.spbau.bachelors2015.blackjack.Suit.SPADES;
 
 public class GUI extends Application{
-    public static final int MAX_SCORE = 21;
-
     private static final int HEIGHT = 320;
 
     private static final int WIDTH = 320;
@@ -82,7 +80,7 @@ public class GUI extends Application{
     private final EventHandler<ActionEvent> onMoreClick = event ->  {
         Card newCard = game.nextCard();
         scoreText.setText(String.valueOf(game.playerPoints()));
-        if (game.playerPoints() > MAX_SCORE) {
+        if (game.playerPoints() > game.MAX_POINTS) {
             game.pass();
         }
         Text cardText = new Text(newCard.toString());
