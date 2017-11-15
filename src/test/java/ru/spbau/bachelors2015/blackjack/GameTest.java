@@ -3,6 +3,7 @@ package ru.spbau.bachelors2015.blackjack;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -54,8 +55,12 @@ public class GameTest {
 
     @Test
     public void getWinnerTest() {
-        Game game = new Game(deckWithAces);
+        Game game = new Game(deck);
 
-
+        assertEquals(1, game.getWinnerId());
+        game.nextCard(0);
+        assertEquals(0, game.getWinnerId());
     }
+
+
 }
