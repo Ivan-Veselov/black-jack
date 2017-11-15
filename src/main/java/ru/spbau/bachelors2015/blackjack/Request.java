@@ -1,5 +1,7 @@
 package ru.spbau.bachelors2015.blackjack;
 
-abstract public class Request {
-    abstract Object handle();
+import org.jetbrains.annotations.NotNull;
+
+interface Request {
+    Object performOn(@NotNull Game game, int playerId);
 }
