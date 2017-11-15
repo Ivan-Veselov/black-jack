@@ -37,7 +37,7 @@ public class GUI extends Application {
 
     private Text scoreText;
 
-    private Server server; // todo: initialize
+    private Server server = new ServerCommunicator();
 
     private ListView<Text> cardsList = new ListView<>();
 
@@ -160,5 +160,7 @@ public class GUI extends Application {
         resBox.setAlignment(Pos.CENTER);
         Scene resScene = new Scene(resBox, WIDTH, HEIGHT);
         stage.setScene(resScene);
+
+        server.disconnect();
     }
 }
