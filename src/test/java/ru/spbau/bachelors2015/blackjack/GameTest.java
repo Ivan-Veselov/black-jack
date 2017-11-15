@@ -18,29 +18,44 @@ public class GameTest {
             new Card(SPADES, TEN),
             new Card(HEARTS, TEN));
 
+    private List<Card> deckWithAces = Arrays.asList(
+            new Card(SPADES, ACE),
+            new Card(HEARTS, ACE),
+            new Card(DIAMONDS, ACE),
+            new Card(CLUBS, ACE)
+    );
+
     @Test
-    public void nextCard() throws Exception {
+    public void testScore() {
         Game game = new Game(deck);
-        Card f = game.nextCard();
-        assertEquals(f, new Card(SPADES, TEN));
+        List<Card> hand = game.getPlayersHand(0);
+
+        int score = game.getPlayerPoints(0);
+        int expected = hand.get(0).rank().value() + hand.get(1).rank().value();
+        assertEquals(expected, score);
     }
 
     @Test
-    public void pass() throws Exception {
-        Game game = new Game(deck);
-        assertEquals(12, game.computerPoints());
-        assertEquals(5, game.playerPoints());
-        game.pass();
-        assertEquals(22, game.computerPoints());
-        assertEquals(5, game.playerPoints());
+    public void testScoreWithAces() {
+        Game game = new Game(deckWithAces);
+
+        int score1 = game.getPlayerPoints(0);
+        int score2 = game.getPlayerPoints(1);
+        assertEquals(2, score1);
+        assertEquals(2, score2);
     }
 
     @Test
-    public void complicated() throws Exception {
-        Game game = new Game(deck);
-        game.nextCard();
-        game.pass();
-        assertEquals(22, game.computerPoints());
-        assertEquals(15, game.playerPoints());
+    public void drawTest() {
+        Game game = new Game(deckWithAces);
+
+        assertEquals(-1, game.getWinnerId());
+    }
+
+    @Test
+    public void getWinnerTest() {
+        Game game = new Game(deckWithAces);
+
+
     }
 }
