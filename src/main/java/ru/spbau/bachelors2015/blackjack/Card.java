@@ -1,5 +1,8 @@
 package ru.spbau.bachelors2015.blackjack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Card {
     private Suit suit;
 
@@ -39,5 +42,15 @@ public class Card {
         int result = suit.hashCode();
         result = 31 * result + rank.hashCode();
         return result;
+    }
+
+    public static List<Card> fullDeck() {
+        List<Card> deck = new ArrayList<>();
+        for (CardRank cardRank : CardRank.values()) {
+            for (Suit suit : Suit.values()) {
+                deck.add(new Card(suit, cardRank));
+            }
+        }
+        return deck;
     }
 }

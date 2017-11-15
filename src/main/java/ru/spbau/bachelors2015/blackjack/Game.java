@@ -16,12 +16,7 @@ public class Game {
     }
 
     public Game() {
-        deck = new ArrayList<>();
-        for (Suit suit : Suit.values()) {
-            for (CardRank rank : CardRank.values()) {
-                deck.add(new Card(suit, rank));
-            }
-        }
+        deck = Card.fullDeck();
 
         Collections.shuffle(deck);
 
