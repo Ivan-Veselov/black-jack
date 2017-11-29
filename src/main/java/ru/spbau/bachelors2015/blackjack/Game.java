@@ -10,6 +10,9 @@ public class Game {
 
     private Player[] players;
 
+    // id игрока, кто сходил последним
+    private int lastPlayerId = -1;
+
     public Game(List<Card> deck) {
         this.deck = new ArrayList<>(deck);
         afterInit();
@@ -41,8 +44,19 @@ public class Game {
     public Card nextCard(int playerId) {
         Card card = pick();
         players[playerId].addCard(card);
+        lastPlayerId = playerId;
 
         return card;
+    }
+
+    // возвращает -1, если никто еще не ходил(игра не началась)
+    // иначе возвращает id игрока, кто будет ходить следующим
+    public int nextPlayerTurn() {
+        if (lastPlayerId == -1) {
+            return -1;
+        }
+
+        return (lastPlayerId + 1) % players.length;
     }
 
     // true, если все спасовали
