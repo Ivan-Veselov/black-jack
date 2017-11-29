@@ -36,7 +36,7 @@ public class RealServer {
                 if (inputStream.available() > 0) {
                     Request request = (Request) inputStream.readObject();
                     Object result;
-                    if (request instanceof StartedRequest) {
+                    if (request instanceof IsStartedRequest) {
                         result = playerSockets.size() == 2;
                     }
                     else {
