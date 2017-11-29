@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static ru.spbau.bachelors2015.blackjack.Status.*;
+
 public class Game {
     public final static int MAX_POINTS = 21;
     private List<Card> deck;
 
     private Player[] players;
+
+    // id игрока, кто сходил последним
+    // изначальная инициализация -- последний игрок, чтобы следующий игрок(т.е. первый) ходил первым
+    // т.е. это сделано для того, чтобы первый игрок всегда ходил бы первым
+    private int lastPlayerId = players.length - 1;
 
     public Game(List<Card> deck) {
         this.deck = new ArrayList<>(deck);
@@ -39,10 +46,41 @@ public class Game {
     // playerIndex == 0 -- первый игрок
     // playerIndex == 1 -- второй игрок
     public Card nextCard(int playerId) {
+        if (nextPlayerTurn() != playerId) {
+            return null;
+        }
+
         Card card = pick();
         players[playerId].addCard(card);
+        lastPlayerId = playerId;
 
         return card;
+    }
+
+    public Status getStatus(int playerId) {
+        if (nextPlayerTurn() == playerId) {
+            return YOUR_TURN;
+        }
+
+        if (nextPlayerTurn() == -1) {
+            if (getWinnerId() == playerId) {
+                return WIN;
+            } else {
+                return LOSE;
+            }
+        }
+
+        return HIS_TURN;
+    }
+
+    // возвращает id игрока, кто будет ходить следующим
+    // иначе возвращает -1, если игра закончена
+    public int nextPlayerTurn() {
+        if (isAllPassed()) {
+            return -1;
+        }
+
+        return (lastPlayerId + 1) % players.length;
     }
 
     // true, если все спасовали
