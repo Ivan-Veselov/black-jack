@@ -12,7 +12,7 @@ public class RealServer {
     public static final int PORT_NUMBER = 1234;
     private static final int PLAYER_COUNT = 2;
 
-    public void main() throws IOException, ClassNotFoundException {
+    public static void main(String args[]) throws IOException, ClassNotFoundException {
         ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
         List<Socket> playerSockets = new ArrayList<>();
 
