@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RealServer {
-    private static final int PORT_NUMBER = 1234;
+    public static final int PORT_NUMBER = 1234;
     private static final int PLAYER_COUNT = 2;
 
     public void main() throws IOException, ClassNotFoundException {
@@ -36,7 +36,7 @@ public class RealServer {
                 if (inputStream.available() > 0) {
                     Request request = (Request) inputStream.readObject();
                     Object result;
-                    if (request instanceof StartedRequest) {
+                    if (request instanceof IsStartedRequest) {
                         result = playerSockets.size() == 2;
                     }
                     else {
