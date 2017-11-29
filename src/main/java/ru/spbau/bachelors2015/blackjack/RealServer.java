@@ -16,16 +16,13 @@ public class RealServer {
         ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
         List<Socket> playerSockets = new ArrayList<>();
 
-        Thread acceptorThread = new Thread(() -> {
-            while (playerSockets.size() < 2) {
-                try {
-                    playerSockets.add(serverSocket.accept());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        while (playerSockets.size() < 2) {
+            try {
+                playerSockets.add(serverSocket.accept());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
-        acceptorThread.start();
+        }
 
         Game game = new Game();
 
@@ -38,8 +35,7 @@ public class RealServer {
                     Object result;
                     if (request instanceof IsStartedRequest) {
                         result = playerSockets.size() == 2;
-                    }
-                    else {
+                    } else {
                         result = request.performOn(game, playerId);
                     }
                     ObjectOutputStream outputStream = new ObjectOutputStream(playerSocket.getOutputStream());

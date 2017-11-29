@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-
 public class GUI extends Application {
     private static final int HEIGHT = 320;
 
@@ -126,7 +125,11 @@ public class GUI extends Application {
         serverPass();
         more.setDisable(true);
         finish.setDisable(true);
-        onGameFinish();
+        try {
+            onGameFinish();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     };
 
     private boolean serverWaitForGameFinish() {
@@ -142,7 +145,7 @@ public class GUI extends Application {
         }
     }
 
-    public void onGameFinish() {
+    public void onGameFinish() throws IOException {
         boolean won = serverWaitForGameFinish();
 
         Text resText = new Text();

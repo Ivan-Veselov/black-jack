@@ -15,7 +15,7 @@ public class Game {
     // id игрока, кто сходил последним
     // изначальная инициализация -- последний игрок, чтобы следующий игрок(т.е. первый) ходил первым
     // т.е. это сделано для того, чтобы первый игрок всегда ходил бы первым
-    private int lastPlayerId = players.length - 1;
+    private int lastPlayerId;
 
     public Game(List<Card> deck) {
         this.deck = new ArrayList<>(deck);
@@ -31,7 +31,9 @@ public class Game {
     }
 
     private void afterInit() {
+        // TODO : add constant -- amount of players
         players = new Player[2];
+        lastPlayerId = players.length - 1;
 
         for (int i = 0; i < 2; i++) {
             players[i] = new Player();
