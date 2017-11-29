@@ -16,20 +16,12 @@ public class RealServer {
         ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
         List<Socket> playerSockets = new ArrayList<>();
 
-        Thread acceptorThread = new Thread(() -> {
-            while (playerSockets.size() < 2) {
-                try {
-                    playerSockets.add(serverSocket.accept());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        while (playerSockets.size() < 2) {
+            try {
+                playerSockets.add(serverSocket.accept());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
-        acceptorThread.start();
-        try {
-            acceptorThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
 
         Game game = new Game();
