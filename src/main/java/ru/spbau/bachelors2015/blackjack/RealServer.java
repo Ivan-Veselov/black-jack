@@ -25,11 +25,16 @@ public class RealServer {
         }
 
         Game game = new Game();
+        final List<ObjectOutputStream> outputs = new ArrayList<>();
+        final List<ObjectInputStream> inputs = new ArrayList<>();
+        for (Socket socket : playerSockets) {
+            inputs.add(new ObjectInputStream(socket.getInputStream()));
+            outputs.add(new ObjectOutputStream(socket.getOutputStream()));
+        }
 
         while (true) {
             for (int playerId = 0; playerId < playerSockets.size(); playerId++) {
-                Socket playerSocket = playerSockets.get(playerId);
-                ObjectInputStream inputStream = new ObjectInputStream(playerSocket.getInputStream());
+                ObjectInputStream inputStream = inputs.get(playerId);
                 if (inputStream.available() > 0) {
                     Request request = (Request) inputStream.readObject();
                     Object result;
@@ -38,7 +43,7 @@ public class RealServer {
                     } else {
                         result = request.performOn(game, playerId);
                     }
-                    ObjectOutputStream outputStream = new ObjectOutputStream(playerSocket.getOutputStream());
+                    ObjectOutputStream outputStream = outputs.get(playerId);
                     outputStream.writeObject(result);
                 }
             }
