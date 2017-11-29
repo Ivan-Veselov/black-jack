@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RealServer {
-    private static final int PORT_NUMBER = 1234;
+    public static final int PORT_NUMBER = 1234;
     private static final int PLAYER_COUNT = 2;
 
     public void main() throws IOException, ClassNotFoundException {
