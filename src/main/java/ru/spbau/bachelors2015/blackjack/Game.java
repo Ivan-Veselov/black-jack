@@ -11,7 +11,9 @@ public class Game {
     private Player[] players;
 
     // id игрока, кто сходил последним
-    private int lastPlayerId = -1;
+    // изначальная инициализация -- последний игрок, чтобы следующий игрок(т.е. первый) ходил первым
+    // т.е. это сделано для того, чтобы первый игрок всегда ходил бы первым
+    private int lastPlayerId = players.length - 1;
 
     public Game(List<Card> deck) {
         this.deck = new ArrayList<>(deck);
@@ -42,6 +44,10 @@ public class Game {
     // playerIndex == 0 -- первый игрок
     // playerIndex == 1 -- второй игрок
     public Card nextCard(int playerId) {
+        if (nextPlayerTurn() != playerId) {
+            return null;
+        }
+
         Card card = pick();
         players[playerId].addCard(card);
         lastPlayerId = playerId;
@@ -49,13 +55,8 @@ public class Game {
         return card;
     }
 
-    // возвращает -1, если никто еще не ходил(игра не началась)
     // иначе возвращает id игрока, кто будет ходить следующим
     public int nextPlayerTurn() {
-        if (lastPlayerId == -1) {
-            return -1;
-        }
-
         return (lastPlayerId + 1) % players.length;
     }
 
