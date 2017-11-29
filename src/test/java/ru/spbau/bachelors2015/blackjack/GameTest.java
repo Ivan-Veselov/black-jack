@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static ru.spbau.bachelors2015.blackjack.Status.*;
 import static ru.spbau.bachelors2015.blackjack.Suit.*;
 import static ru.spbau.bachelors2015.blackjack.CardRank.*;
 
@@ -17,7 +18,10 @@ public class GameTest {
             new Card(HEARTS, FIVE),
             new Card(HEARTS, SEVEN),
             new Card(SPADES, TEN),
-            new Card(HEARTS, TEN));
+            new Card(HEARTS, TEN),
+            new Card(CLUBS, TEN),
+            new Card(CLUBS, SEVEN),
+            new Card(CLUBS, FIVE));
 
     private List<Card> deckWithAces = Arrays.asList(
             new Card(SPADES, ACE),
@@ -62,5 +66,82 @@ public class GameTest {
         assertEquals(0, game.getWinnerId());
     }
 
+    @Test
+    public void getPlayerTurnTest() {
+        Game game = new Game(deck);
 
+        assertEquals(0, game.nextPlayerTurn());
+        assertEquals(null, game.nextCard(1));
+
+        game.nextCard(0);
+
+        assertEquals(1, game.nextPlayerTurn());
+        assertEquals(null, game.nextCard(0));
+
+        game.nextCard(1);
+
+        assertEquals(0, game.nextPlayerTurn());
+        assertEquals(null, game.nextCard(1));
+
+        game.pass(0);
+
+        assertEquals(1, game.nextPlayerTurn());
+        assertEquals(null, game.nextCard(0));
+
+        game.nextCard(1);
+
+        assertEquals(1, game.nextPlayerTurn());
+        assertEquals(null, game.nextCard(0));
+
+        game.pass(0); // double pass
+        game.pass(1);
+
+        assertEquals(-1, game.nextPlayerTurn());
+        assertEquals(null, game.nextCard(0));
+        assertEquals(null, game.nextCard(1));
+    }
+
+    @Test
+    public void getStatusTest() {
+        Game game = new Game(deck);
+
+        assertEquals(YOUR_TURN, game.getStatus(0));
+        assertEquals(HIS_TURN, game.getStatus(1));
+
+        game.nextCard(0);
+
+        assertEquals(YOUR_TURN, game.getStatus(1));
+        assertEquals(HIS_TURN, game.getStatus(0));
+
+        game.nextCard(1);
+
+        assertEquals(YOUR_TURN, game.getStatus(0));
+        assertEquals(HIS_TURN, game.getStatus(1));
+
+        game.pass(0);
+
+        assertEquals(YOUR_TURN, game.getStatus(1));
+        assertEquals(HIS_TURN, game.getStatus(0));
+
+        game.nextCard(1);
+
+        assertEquals(YOUR_TURN, game.getStatus(1));
+        assertEquals(HIS_TURN, game.getStatus(0));
+
+        game.pass(1);
+
+        assertEquals(LOSE, game.getStatus(1));
+        assertEquals(WIN, game.getStatus(0));
+    }
+
+    @Test
+    public void gameDrawTest() {
+        Game game = new Game(deckWithAces);
+
+        game.pass(0);
+        game.pass(1);
+
+        assertEquals(DRAW, game.getStatus(1));
+        assertEquals(DRAW, game.getStatus(0));
+    }
 }

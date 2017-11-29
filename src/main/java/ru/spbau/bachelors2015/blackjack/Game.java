@@ -45,6 +45,7 @@ public class Game {
         }
     }
 
+    // добавляет карту из колоды определенному игроку
     // playerIndex == 0 -- первый игрок
     // playerIndex == 1 -- второй игрок
     public Card nextCard(int playerId) {
@@ -65,6 +66,10 @@ public class Game {
         }
 
         if (nextPlayerTurn() == -1) {
+            if (getWinnerId() == -1) {
+                return DRAW;
+            }
+
             if (getWinnerId() == playerId) {
                 return WIN;
             } else {
@@ -78,11 +83,14 @@ public class Game {
     // возвращает id игрока, кто будет ходить следующим
     // иначе возвращает -1, если игра закончена
     public int nextPlayerTurn() {
-        if (isAllPassed()) {
-            return -1;
+        for (int nextId = (lastPlayerId + 1) % players.length; nextId < players.length; nextId++) {
+            if (!players[nextId].isPassed()) {
+                return nextId;
+            }
         }
 
-        return (lastPlayerId + 1) % players.length;
+        // иначе, все спасовали и игра закончилась
+        return -1;
     }
 
     // true, если все спасовали
