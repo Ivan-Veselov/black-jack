@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static ru.spbau.bachelors2015.blackjack.Status.*;
+
 public class Game {
     public final static int MAX_POINTS = 21;
     private List<Card> deck;
@@ -55,8 +57,29 @@ public class Game {
         return card;
     }
 
-    // иначе возвращает id игрока, кто будет ходить следующим
+    public Status getStatus(int playerId) {
+        if (nextPlayerTurn() == playerId) {
+            return YOUR_TURN;
+        }
+
+        if (nextPlayerTurn() == -1) {
+            if (getWinnerId() == playerId) {
+                return WIN;
+            } else {
+                return LOSE;
+            }
+        }
+
+        return HIS_TURN;
+    }
+
+    // возвращает id игрока, кто будет ходить следующим
+    // иначе возвращает -1, если игра закончена
     public int nextPlayerTurn() {
+        if (isAllPassed()) {
+            return -1;
+        }
+
         return (lastPlayerId + 1) % players.length;
     }
 
