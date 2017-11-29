@@ -8,12 +8,19 @@ import java.net.Socket;
 public class ServerCommunicator implements Server{
     private Socket connection;
 
-    private Object sendRequest(final Request request) throws IOException, ClassNotFoundException {
-        ObjectOutputStream outputStream = new ObjectOutputStream(connection.getOutputStream());
-        outputStream.writeObject(request);
+    // TODO: add reasonable exception handling
+    private Object sendRequest(final Request request) {
+        try {
 
-        ObjectInputStream inputStream = new ObjectInputStream(connection.getInputStream());
-        return inputStream.readObject();
+            ObjectOutputStream outputStream = new ObjectOutputStream(connection.getOutputStream());
+            outputStream.writeObject(request);
+
+            ObjectInputStream inputStream = new ObjectInputStream(connection.getInputStream());
+            return inputStream.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -31,32 +38,28 @@ public class ServerCommunicator implements Server{
         return connection.isConnected() || !connection.isClosed();
     }
 
-    // TODO
     @Override
     public Status status() {
-
-        return null;
+        return (Status) sendRequest(new StatusRequest());
     }
 
-    // TODO
     @Override
-    public void pass() {}
+    public void pass() {
+        sendRequest(new PassRequest());
+    }
 
-    // TODO
     @Override
     public Card nextCard() {
-        return null;
+        return (Card) sendRequest(new NextCardRequest());
     }
 
-    // TODO
     @Override
     public int myPoints() {
-        return 0;
+        return (int) sendRequest(new MyPointsRequest());
     }
 
-    // TODO
     @Override
     public int hisPoints() {
-        return 0;
+        return (int) sendRequest(new HisPointsRequest());
     }
 }
