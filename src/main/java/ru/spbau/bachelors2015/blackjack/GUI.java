@@ -15,9 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static ru.spbau.bachelors2015.blackjack.Server.Status.LOSE;
-import static ru.spbau.bachelors2015.blackjack.Server.Status.WIN;
-
 public class GUI extends Application {
     private static final int HEIGHT = 320;
 
@@ -99,13 +96,13 @@ public class GUI extends Application {
     }
 
     private void serverPass() {
-        while (server.status() != Server.Status.YOUR_TURN);
+        while (server.status() != Status.YOUR_TURN);
 
         server.pass();
     }
 
     private Card serverNextCard() {
-        while (server.status() != Server.Status.YOUR_TURN);
+        while (server.status() != Status.YOUR_TURN);
 
         return server.nextCard();
     }
@@ -137,12 +134,12 @@ public class GUI extends Application {
 
     private boolean serverWaitForGameFinish() {
         while (true) {
-            Server.Status status = server.status();
-            if (status == WIN) {
+            Status status = server.status();
+            if (status == Status.WIN) {
                 return true;
             }
 
-            if (status == LOSE) {
+            if (status == Status.LOSE) {
                 return false;
             }
         }
@@ -167,6 +164,10 @@ public class GUI extends Application {
         Scene resScene = new Scene(resBox, WIDTH, HEIGHT);
         stage.setScene(resScene);
 
-        server.disconnect();
+        try {
+            server.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
