@@ -26,6 +26,11 @@ public class RealServer {
             }
         });
         acceptorThread.start();
+        try {
+            acceptorThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Game game = new Game();
 
@@ -38,8 +43,7 @@ public class RealServer {
                     Object result;
                     if (request instanceof StartedRequest) {
                         result = playerSockets.size() == 2;
-                    }
-                    else {
+                    } else {
                         result = request.performOn(game, playerId);
                     }
                     ObjectOutputStream outputStream = new ObjectOutputStream(playerSocket.getOutputStream());

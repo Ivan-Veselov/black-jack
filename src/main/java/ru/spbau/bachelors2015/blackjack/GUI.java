@@ -13,6 +13,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 import static ru.spbau.bachelors2015.blackjack.Server.Status.LOSE;
 import static ru.spbau.bachelors2015.blackjack.Server.Status.WIN;
 
@@ -126,7 +128,11 @@ public class GUI extends Application {
         serverPass();
         more.setDisable(true);
         finish.setDisable(true);
-        onGameFinish();
+        try {
+            onGameFinish();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     };
 
     private boolean serverWaitForGameFinish() {
@@ -142,7 +148,7 @@ public class GUI extends Application {
         }
     }
 
-    public void onGameFinish() {
+    public void onGameFinish() throws IOException {
         boolean won = serverWaitForGameFinish();
 
         Text resText = new Text();
